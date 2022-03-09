@@ -1,5 +1,7 @@
 # winner_create_page
 
+Winner 创建页面自动生成模版
+
 ## 安装 Mint
 
 ```shell
