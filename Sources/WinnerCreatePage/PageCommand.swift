@@ -12,32 +12,23 @@ import SwiftShell
 struct PageCommand: ParsableCommand {
     
     static var configuration: CommandConfiguration {
-        .init(commandName:"page")
+        .init(commandName:"page", abstract: "快速创建页面模版")
     }
     
     @Argument(help:"页面文件夹名称,小些下划线拼接，比如my_order")
     var name:String
     func run() throws {
         /// 获取当前运行的路径
-        guard let pwd = ProcessInfo.processInfo.environment["PWD"] else {
-            print("获取不到当前路径PWD的值")
-            throw ExitCode.failure
-        }
+        let pwd = try getEnvironment(name: "PWD")
         print(pwd)
-        let dartToolPath = "\(pwd)/.dart_tool"
-        var isDirectory = ObjCBool(false)
-        guard FileManager.default.fileExists(atPath: dartToolPath, isDirectory: &isDirectory), isDirectory.boolValue else {
-            print("当前不是一个Flutter项目或者不在主目录")
-            throw ExitCode.failure
-        }
+        try checkIsFlutterDir()
         var currentdirectory = "\(pwd)/lib/page"
         SwiftShell.main.currentdirectory = currentdirectory
         /// 创建对应目录
         try runAndPrint("mkdir", name)
         currentdirectory += "/\(name)"
         SwiftShell.main.currentdirectory = currentdirectory
-        let names = name.components(separatedBy: "_")
-        let crateName = names.map({$0.capitalized}).joined(separator: "")
+        let crateName = getCreateName(name: name)
         let pageContent = pageContent(name: crateName, pathName: name)
         /// 创建Page文件
         FileManager.default.createFile(atPath: "\(currentdirectory)/\(name)_page.dart",
