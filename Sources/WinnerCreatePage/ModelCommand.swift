@@ -130,7 +130,7 @@ struct ModelCommand: ParsableCommand {
                             encoding: .utf8)
         }
         context.currentdirectory = pwd
-        try context.runAndPrint("flutter","pub","run","build_runner","build")
+        try context.runAndPrint("flutter","pub","run","build_runner","build","--delete-conflicting-outputs")
         print("\(name)模型代码生成成功")
     }
     
