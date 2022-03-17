@@ -45,7 +45,7 @@ struct ApiCommand: ParsableCommand {
             context.currentdirectory = "\(pwd)/lib"
             try context.runAndPrint("mkdir", "api")
         }
-        let methods = ["get","post"]
+        let methods = ["GET","POST"]
         let methodIndex = try getReadLine(from: methods, tip: "请输入请求方式:")
         let responseTypes = [
             "void","int","double","String","num","JSON"
