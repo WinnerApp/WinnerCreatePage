@@ -34,8 +34,11 @@ struct ApiCommand: ParsableCommand {
                 let filePath = "\(apiPath)/\(content)"
                 /// 获取文件内容
                 let fileContent = try String(contentsOfFile: filePath, encoding: .utf8)
+                let pathContent = """
+                "\(path)"
+                """
                 /// 查询当前的接口路径是否存在
-                guard !fileContent.contains(path) else {
+                guard !fileContent.contains(pathContent) else {
                     print("\(path) 已经存在于\(filePath)中")
                     throw ExitCode.failure
                 }
