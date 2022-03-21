@@ -238,8 +238,8 @@ struct ModelCommand: ParsableCommand {
         code += """
           \n
           \(override)
-          Map<String, dynamic> toJson(\(name) object) {
-              return _$\(name)ToJson(object);
+          Map<String, dynamic> toJson() {
+              return _$\(name)ToJson(this);
           }
         
         }
