@@ -235,15 +235,27 @@ struct ModelCommand: ParsableCommand {
         if (root) {
             override = "@override"
         }
-        code += """
-          \n
-          \(override)
-          Map<String, dynamic> toJson() {
-              return _$\(name)ToJson(this);
-          }
-        
+        if root {
+            code += """
+              \n
+              \(override)
+              Map<String, dynamic> toJson(\(name) object) {
+                  return _$\(name)ToJson(object);
+              }
+            
+            }
+            """
+        } else {
+            code += """
+              \n
+              \(override)
+              Map<String, dynamic> toJson() {
+                  return _$\(name)ToJson(this);
+              }
+            
+            }
+            """
         }
-        """
         return code
     }
     
