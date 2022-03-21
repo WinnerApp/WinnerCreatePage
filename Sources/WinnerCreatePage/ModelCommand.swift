@@ -173,8 +173,11 @@ struct ModelCommand: ParsableCommand {
                 defaultValue = "\(childrenName)()"
                 typeName = "\(childrenName)"
                 
-            } else if let value = value as? [[String:Any]], let first = value.first {
+            } else if let value = value as? [[String:Any]] {
                 
+                guard let first = value.first else {
+                    continue
+                }
                 /// 如果是一个字段
                 let childrenName = name + getCreateName(name: key)
                 let content = try generateModelCode(root: false,

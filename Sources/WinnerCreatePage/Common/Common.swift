@@ -8,6 +8,7 @@
 import Foundation
 import ArgumentParser
 import SwiftShell
+import AppKit
 
 func getEnvironment(name:String) throws -> String {
     guard let value = ProcessInfo.processInfo.environment[name] else {
@@ -74,10 +75,7 @@ func createContext() -> CustomContext {
 }
 
 func getPasteText() -> String {
-    let context = createContext()
-    let command = context.runAsync("pbpaste")
-    command.resume()
-    return command.stdout.read()
+    return NSPasteboard.general.string(forType: .string) ?? ""
 }
 
 func getTypeName(from value:Any) throws -> String {
