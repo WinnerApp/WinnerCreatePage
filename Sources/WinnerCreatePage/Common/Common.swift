@@ -29,13 +29,13 @@ func checkIsFlutterDir() throws {
 }
 
 func getCreateName(name:String) -> String {
-    return name.components(separatedBy: "_")
+    return getNames(name: name)
         .map({$0.capitalized})
         .joined(separator: "")
 }
 
 func getKeyName(name:String) -> String {
-    var names = name.components(separatedBy: "_")
+    var names = getNames(name: name)
     guard names.count > 1 else {
         return name
     }
@@ -43,6 +43,17 @@ func getKeyName(name:String) -> String {
     names = names.map({$0.capitalized})
     names.insert(first, at: 0)
     return names.joined(separator: "")
+}
+
+func getNames(name:String) -> [String] {
+    let separateds = ["-","_"]
+    for separated in separateds {
+        guard name.contains(separated) else {
+            continue
+        }
+        return name.components(separatedBy: separated)
+    }
+    return [name]
 }
 
 func getReadLine(from list:[String], tip:String) throws -> Int {
