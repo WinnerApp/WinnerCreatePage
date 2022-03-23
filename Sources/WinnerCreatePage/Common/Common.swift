@@ -90,23 +90,39 @@ func getPasteText() -> String {
 }
 
 func getTypeName(from value:Any) throws -> String {
-    if value is Int {
-        return "int"
-    } else if value is Double {
-        return "double"
-    } else if value is String {
+    let type = "\(type(of: value))"
+    print(type)
+    if isNumber(type) {
+        return "num"
+    } else if isString(type) {
         return "String"
     } else if let list = value as? [Any], let first = list.first {
         return "List<\(try getTypeName(from: first))>"
+    } else if isBool(type) {
+        return "bool"
     }
-    print("\(type(of: value))类型没有解析，请联系开发者。")
+    print("\(type)类型没有解析，请联系开发者。")
     throw ExitCode.failure
 }
 
+func isNumber(_ type:String) -> Bool {
+    return ["__NSCFNumber"].contains(type)
+}
+
+func isString(_ type:String) -> Bool {
+    return [
+        "__NSCFString",
+        "__NSCFConstantString",
+        "NSTaggedPointerString"
+    ].contains(type)
+}
+
+func isBool(_ type:String) -> Bool {
+    return ["__NSCFBoolean"].contains(type)
+}
+
 func getTypeDefault(from name:String) throws -> String {
-    if name == "int" {
-        return "0"
-    } else if name == "double" {
+    if name == "num" {
         return "0"
     } else if name == "String" {
         return """
@@ -114,6 +130,8 @@ func getTypeDefault(from name:String) throws -> String {
         """
     } else if name.contains("List") {
         return "[]"
+    } else if name == "bool" {
+        return "false"
     }
     print("\(type(of: name))类型没有默认值，请联系开发者。")
     throw ExitCode.failure
