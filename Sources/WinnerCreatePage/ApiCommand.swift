@@ -31,6 +31,9 @@ struct ApiCommand: ParsableCommand {
             /// 获取目前所有的接口文件
             let contents = try FileManager.default.contentsOfDirectory(atPath: apiPath)
             for content in contents {
+                guard content != ".DS_Store"  else {
+                    continue
+                }
                 let filePath = "\(apiPath)/\(content)"
                 /// 获取文件内容
                 let fileContent = try String(contentsOfFile: filePath, encoding: .utf8)
