@@ -17,6 +17,10 @@ struct PageCommand: ParsableCommand {
     
     @Argument(help:"页面文件夹名称,小些下划线拼接，比如my_order")
     var name:String
+    
+    @Flag(name: .short, help: "是否重写存在的页面?")
+    var force: Bool = false
+    
     func run() throws {
         /// 获取当前运行的路径
         let pwd = try getEnvironment(name: "PWD")
@@ -30,8 +34,13 @@ struct PageCommand: ParsableCommand {
         SwiftShell.main.currentdirectory = currentdirectory
         let crateName = getCreateName(name: name)
         let pageContent = pageContent(name: crateName, pathName: name)
+        let pageFile = "\(currentdirectory)/\(name)_page.dart"
+        if FileManager.default.fileExists(atPath: pageFile), !force {
+            print("\(pageFile)已经存在，重写请添加 -f 参数")
+            return
+        }
         /// 创建Page文件
-        FileManager.default.createFile(atPath: "\(currentdirectory)/\(name)_page.dart",
+        FileManager.default.createFile(atPath: pageFile,
                                            contents: pageContent.data(using: .utf8),
                                            attributes: nil)
         /// 创建 ViewModel
@@ -43,6 +52,11 @@ struct PageCommand: ParsableCommand {
 
         class \(crateName)PageViewModel extends BaseViewModel {}
         """
+        let viewModelPath = "\(currentdirectory)/\(name)_page_view_model.dart"
+        if FileManager.default.fileExists(atPath: viewModelPath), !force {
+            print("\(viewModelPath)已经存在，重写请添加 -f 参数")
+            return
+        }
         FileManager.default.createFile(atPath: "\(currentdirectory)/\(name)_page_view_model.dart",
                                        contents: viewModelContent.data(using: .utf8),
                                        attributes: nil)

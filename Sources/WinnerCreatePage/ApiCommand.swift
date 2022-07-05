@@ -18,6 +18,9 @@ struct ApiCommand: ParsableCommand {
     @Argument(help:"接口的名字 比如 user_login 会创建 user_login_api.dart")
     var name:String
     
+    @Flag(name: .short, help: "是否重写?")
+    var force: Bool = false
+    
     func run() throws {
         let pwd = try getEnvironment(name: "PWD")
         print(pwd)
@@ -95,6 +98,10 @@ struct ApiCommand: ParsableCommand {
             try context.runAndPrint("mkdir", "api")
         }
         let apiFile = apiPath + "/\(name)_api.dart"
+        if FileManager.default.fileExists(atPath: apiFile), !force {
+            print("\(apiFile) 已经存在，如果想重写请带上 -f 参数")
+            return
+        }
         try apiContent.write(toFile: apiFile,
                              atomically: true,
                              encoding: .utf8)
