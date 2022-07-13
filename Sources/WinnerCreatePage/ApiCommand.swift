@@ -57,7 +57,7 @@ struct ApiCommand: ParsableCommand {
         let methods = ["GET","POST"]
         let methodIndex = try getReadLine(from: methods, tip: "请输入请求方式:")
         let responseTypes = [
-            "void","int","double","String","num","JSON"
+            "void","int","double","String","num","bool","JSON"
         ]
         let responseTypeIndex = try getReadLine(from: responseTypes, tip: "请选择返回类型:")
         let responseType = responseTypes[responseTypeIndex]
@@ -109,14 +109,20 @@ struct ApiCommand: ParsableCommand {
     
     func classHeader(name:String, converter:String, model:String) -> String {
         return """
-        class \(name)Api extends Api<\(converter), AppModel<\(model)>> {
+        
+        typedef \(name)Api = _Api;
+        typedef _Response = \(model);
+        typedef _Converter = \(converter);
+        typedef _Model = AppModel<_Response>
+        
+        class _Api extends Api<_Converter, _Model> {
         """
     }
     
     func classConverter(converter:String) -> String {
         return """
           @override
-          \(converter) get converter => \(converter)();
+          _Converter get converter => _Converter();
         """
     }
     
@@ -137,7 +143,7 @@ struct ApiCommand: ParsableCommand {
     func classModel(model:String) -> String {
         return """
           @override
-          AppModel<\(model)> get model => AppModel<\(model)>();
+          _Model get model => _Model();
         """
     }
 }

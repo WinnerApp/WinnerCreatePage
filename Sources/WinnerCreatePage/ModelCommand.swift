@@ -228,7 +228,9 @@ struct ModelCommand: ParsableCommand {
         } else {
             code += """
               \n
-              factory \(name).fromJson(Map<String, dynamic> json) => _$\(name)FromJson(json);
+              factory \(name).fromJson(Map<String, dynamic> json) {
+                  return _$\(name)FromJson(json);
+              }
             """
         }
         var override = ""

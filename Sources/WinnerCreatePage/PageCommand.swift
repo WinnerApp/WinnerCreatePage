@@ -50,7 +50,9 @@ struct PageCommand: ParsableCommand {
         let viewModelContent = """
         import 'package:flutter_winner_app/flutter_winner_app.dart';
 
-        class \(crateName)PageViewModel extends BaseViewModel {}
+        typedef \(crateName)PageViewModel = _VM;
+        
+        class _VM extends BaseViewModel {}
         """
         let viewModelPath = "\(currentdirectory)/\(name)_page_view_model.dart"
         if FileManager.default.fileExists(atPath: viewModelPath), !force {
@@ -66,24 +68,27 @@ struct PageCommand: ParsableCommand {
         return """
         import 'package:flutter/material.dart';
         import 'package:flutter_winner_app/flutter_winner_app.dart';
-        import 'package:flutter_winner_pda/page/\(pathName)/view_model/\(pathName)_page_view_model.dart';
-
-        class \(name)Page extends StatefulWidget {
-          const \(name)Page({Key? key}) : super(key: key);
+        
+        typedef \(name)Page = _Page;
+        typedef _\(name)PageState = _State;
+        typedef _VM = \(name)PageViewModel;
+        
+        class _Page extends StatefulWidget {
+          const _Page({Key? key}) : super(key: key);
 
           @override
-          State<\(name)Page> createState() => _\(name)PageState();
+          State<_Page> createState() => _State();
         }
 
-        class _\(name)PageState extends BasePage<\(name)Page, \(name)PageViewModel> {
+        class _State extends BasePage<_Page, _VM> {
           @override
           Widget buildPage(BuildContext context) {
             return Container();
           }
 
           @override
-          \(name)PageViewModel create() {
-            return \(name)PageViewModel();
+          _VM create() {
+            return _VM();
           }
         }
         """
