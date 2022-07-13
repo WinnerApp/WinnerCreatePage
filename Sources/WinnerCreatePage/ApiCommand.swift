@@ -113,7 +113,7 @@ struct ApiCommand: ParsableCommand {
         typedef \(name)Api = _Api;
         typedef _Response = \(model);
         typedef _Converter = \(converter);
-        typedef _Model = AppModel<_Response>
+        typedef _Model = AppModel<_Response>;
         
         class _Api extends Api<_Converter, _Model> {
         """
