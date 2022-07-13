@@ -70,7 +70,6 @@ struct PageCommand: ParsableCommand {
         import 'package:flutter_winner_app/flutter_winner_app.dart';
         
         typedef \(name)Page = _Page;
-        typedef _\(name)PageState = _State;
         typedef _VM = \(name)PageViewModel;
         
         class _Page extends StatefulWidget {
