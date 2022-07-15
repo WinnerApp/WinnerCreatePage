@@ -106,19 +106,20 @@ func getTypeName(from value:Any) throws -> String {
 }
 
 func isNumber(_ type:String) -> Bool {
-    return ["__NSCFNumber"].contains(type)
+    return ["__NSCFNumber","Int"].contains(type)
 }
 
 func isString(_ type:String) -> Bool {
     return [
         "__NSCFString",
         "__NSCFConstantString",
-        "NSTaggedPointerString"
+        "NSTaggedPointerString",
+        "String"
     ].contains(type)
 }
 
 func isBool(_ type:String) -> Bool {
-    return ["__NSCFBoolean"].contains(type)
+    return ["__NSCFBoolean","Bool"].contains(type)
 }
 
 func getTypeDefault(from name:String) throws -> String {

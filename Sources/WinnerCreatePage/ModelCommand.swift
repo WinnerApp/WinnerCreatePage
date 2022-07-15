@@ -27,12 +27,22 @@ struct ModelCommand: ParsableCommand {
     
     @Flag(name: .short, help:"是否强制重写")
     var force:Bool = false
+    
+    @Option(help: "从对应语言类型解析")
+    var code: FromCodeLanguage?
         
     func run() throws {
+        
         /// 读取模型的JSON内容
         let jsonText = getPasteText()
         guard let jsonData = jsonText.data(using: .utf8) else {
             throw ExitCode.failure
+        }
+        if let code = code {
+            if code == .kotlin {
+                try parseFromKotlin(text: kotlin)
+                return;
+            }
         }
         guard let json = try? JSONSerialization.jsonObject(with: jsonData,
                                                            options: .fragmentsAllowed) else {
@@ -267,4 +277,142 @@ struct ModelCommand: ParsableCommand {
         Map<String, dynamic> _$\(name)ToJson(\(name) instance) => {};\n
         """
     }
+    
+    func parseFromKotlin(text: String) throws {
+        let propertyTexts = text.components(separatedBy: "\n").map({$0.replacingOccurrences(of: "var", with: "")
+                .replacingOccurrences(of: " ", with: "")
+                .replacingOccurrences(of: ",", with: "")
+                .replacingOccurrences(of: "?", with: "")})
+        var map:[String:Any] = [:]
+        for var propertyText in propertyTexts {
+            let splits = propertyText.components(separatedBy: "/")
+            guard splits.count > 0 else {
+                throw ExitCode.failure
+            }
+            propertyText = splits[0]
+            if propertyText.isEmpty {
+                continue
+            }
+            let splits2 = propertyText.components(separatedBy: ":")
+            guard splits2.count == 2 else {
+                throw ExitCode.failure
+            }
+            let name = splits2[0]
+            let type = splits2[1]
+            
+//            print("\(splits2[0]) \(splits2[1])")
+
+            if type == "String" {
+                map[name] = ""
+            } else if type == "Int" || type == "Long" {
+                map[name] = 0
+            } else if type == "Boolean" {
+                map[name] = true
+            } else if type == "Array<Long>" {
+                map["name"] = [2]
+            } else {
+                print("未识别类型 \(type)")
+                throw ExitCode.failure
+            }
+        }
+        try parseRoot(json: map)
+    }
 }
+
+enum FromCodeLanguage: String, ExpressibleByArgument {
+    case kotlin
+}
+
+let kotlin = """
+    var agingDate: String,
+    var assignedUser: String,
+    var attributeEight: String,
+    var attributeFive: String,
+    var attributeFour: String,
+    var attributeId: String,
+    var attributeOne: String,
+    var attributeSeven: String,
+    var attributeSix: String,
+    var attributeThree: String,
+    var attributeTwo: String,
+    var showAttributeOne:String,
+    var showAttributeTwo:String,
+    var batch: String,
+    var commodityCode: String,
+    var commodityName: String,
+    var conversionQty: String, //箱含量
+    var companyCode: String,
+    var confirmedAt: String,
+    var confirmedBy: String,
+    var convertedQty: String,//单位数量
+    var convertedQtyUm: String,//单位
+    var createBy: String,
+    var createTime: String,
+    var csQty: String,
+    var currentLoc: String,
+    var currentLpn: String,
+    var expirationDate: String,
+    var finishRebatch: String,
+    var fromInventoryId: Int,
+    var fromLoc: String,
+    var fromLpn: String,
+//    var fromQty: Double,
+    var fromQty: Int,
+    var fromZone: String,
+    var groupIndex: Int,
+    var groupNum: Int,
+    var id: Long,// 主键id
+    var inTransitLocked: Int,
+    var internalTaskType: String,//任务类型
+    var inventorySts: String,
+    var lot: String,
+    var manufactureDate: String,
+    var packingCode: String,
+    var pickDropLoc: String,
+    var pickingCartCode: String,
+    var pickingCartPos: String,//拣选车位置号
+    var plQty: String,
+    var rebinShortQty: String,
+    var referenceCode: String,
+    var referenceContCode: String,//参考箱号
+    var referenceContId: String,// 参考箱内部号
+    var referenceId: String,
+    var referenceLineId: String,
+    var referenceReqId: Int,
+    var shelfLifeSts: String,
+    var showCompanyCode: String,
+    var showConvertedQtyUm: String,
+    var status: Int,
+    var taskCode: String,//任务号
+    var taskId: Int,//头部ID
+    var taskType: String,// 任务类型
+    var toInventoryId: String,
+    var toLoc: String,
+    var toLpn: String,
+//    var toQty: Double,
+    var toQty: Int,
+    var toZone: String,
+//    var totalQty: Double,
+    var totalQty: Int,
+    var transContCode: String,
+    var unitQty: Int,//单位规格
+    var updatedBy: String,
+    var updatedTime: String,
+    var userDef: String,
+    var version: Int,
+    var waveId: Int,
+    var putawayByPiece:Int,//  逐件上架 1开启 0关闭
+    var pickByPiece:Int,//逐件拣货  1开启 0关闭
+    var verifyItem:Int,//验证货品
+    var verifyLocation:Int,//验证库位
+    var verifyQuantity:Int,//验证数量
+    var verifyShipCont:Int,//校验组车位置号
+    var verifyLpn:Int,//验证托盘号
+    var verifyCartPos:Int,//验证出库箱
+    var allowOverpick:Int,
+    var allowOverridePutaway:Int,//是否允许 上架覆盖
+    var whCode: String,
+    var tempQuality:Int, //逐件拣货/上架用的临时数量
+    var showAttribute:Boolean,
+    var tdList:Array<Long>?,
+"""
