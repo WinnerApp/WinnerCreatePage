@@ -40,7 +40,7 @@ struct ModelCommand: ParsableCommand {
         }
         if let code = code {
             if code == .kotlin {
-                try parseFromKotlin(text: kotlin)
+                try parseFromKotlin(text: jsonText)
                 return;
             }
         }
@@ -295,7 +295,7 @@ struct ModelCommand: ParsableCommand {
             }
             let splits2 = propertyText.components(separatedBy: ":")
             guard splits2.count == 2 else {
-                throw ExitCode.failure
+                continue
             }
             let name = splits2[0]
             let type = splits2[1]
