@@ -319,6 +319,10 @@ struct ModelCommand: ParsableCommand {
                 throw ExitCode.failure
             }
         }
+        if map.keys.count == 0 {
+            print("没有解析出来任何字段")
+            throw ExitCode.failure
+        }
         try parseRoot(json: map)
     }
 }
