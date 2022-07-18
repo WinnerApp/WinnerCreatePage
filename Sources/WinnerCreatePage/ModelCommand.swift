@@ -280,6 +280,7 @@ struct ModelCommand: ParsableCommand {
     
     func parseFromKotlin(text: String) throws {
         let propertyTexts = text.components(separatedBy: "\n").map({$0.replacingOccurrences(of: "var", with: "")
+                .replacingOccurrences(of: "val", with: "")
                 .replacingOccurrences(of: " ", with: "")
             .replacingOccurrences(of: ",", with: "")})
 //                .replacingOccurrences(of: "?", with: "")})
@@ -326,96 +327,3 @@ enum FromCodeLanguage: String, ExpressibleByArgument {
     case kotlin
 }
 
-let kotlin = """
-    var agingDate: String,
-    var assignedUser: String,
-    var attributeEight: String,
-    var attributeFive: String,
-    var attributeFour: String,
-    var attributeId: String,
-    var attributeOne: String,
-    var attributeSeven: String,
-    var attributeSix: String,
-    var attributeThree: String,
-    var attributeTwo: String,
-    var showAttributeOne:String,
-    var showAttributeTwo:String,
-    var batch: String,
-    var commodityCode: String,
-    var commodityName: String,
-    var conversionQty: String, //箱含量
-    var companyCode: String,
-    var confirmedAt: String,
-    var confirmedBy: String,
-    var convertedQty: String,//单位数量
-    var convertedQtyUm: String,//单位
-    var createBy: String,
-    var createTime: String,
-    var csQty: String,
-    var currentLoc: String,
-    var currentLpn: String,
-    var expirationDate: String,
-    var finishRebatch: String,
-    var fromInventoryId: Int,
-    var fromLoc: String,
-    var fromLpn: String,
-//    var fromQty: Double,
-    var fromQty: Int,
-    var fromZone: String,
-    var groupIndex: Int,
-    var groupNum: Int,
-    var id: Long,// 主键id
-    var inTransitLocked: Int,
-    var internalTaskType: String,//任务类型
-    var inventorySts: String,
-    var lot: String,
-    var manufactureDate: String,
-    var packingCode: String,
-    var pickDropLoc: String,
-    var pickingCartCode: String,
-    var pickingCartPos: String,//拣选车位置号
-    var plQty: String,
-    var rebinShortQty: String,
-    var referenceCode: String,
-    var referenceContCode: String,//参考箱号
-    var referenceContId: String,// 参考箱内部号
-    var referenceId: String,
-    var referenceLineId: String,
-    var referenceReqId: Int,
-    var shelfLifeSts: String,
-    var showCompanyCode: String,
-    var showConvertedQtyUm: String,
-    var status: Int,
-    var taskCode: String,//任务号
-    var taskId: Int,//头部ID
-    var taskType: String,// 任务类型
-    var toInventoryId: String,
-    var toLoc: String,
-    var toLpn: String,
-//    var toQty: Double,
-    var toQty: Int,
-    var toZone: String,
-//    var totalQty: Double,
-    var totalQty: Int,
-    var transContCode: String,
-    var unitQty: Int,//单位规格
-    var updatedBy: String,
-    var updatedTime: String,
-    var userDef: String,
-    var version: Int,
-    var waveId: Int,
-    var putawayByPiece:Int,//  逐件上架 1开启 0关闭
-    var pickByPiece:Int,//逐件拣货  1开启 0关闭
-    var verifyItem:Int,//验证货品
-    var verifyLocation:Int,//验证库位
-    var verifyQuantity:Int,//验证数量
-    var verifyShipCont:Int,//校验组车位置号
-    var verifyLpn:Int,//验证托盘号
-    var verifyCartPos:Int,//验证出库箱
-    var allowOverpick:Int,
-    var allowOverridePutaway:Int,//是否允许 上架覆盖
-    var whCode: String,
-    var tempQuality:Int, //逐件拣货/上架用的临时数量
-    var showAttribute:Boolean,
-    var tdList:Array<Long>?,
-"""
