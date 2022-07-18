@@ -281,15 +281,18 @@ struct ModelCommand: ParsableCommand {
     func parseFromKotlin(text: String) throws {
         let propertyTexts = text.components(separatedBy: "\n").map({$0.replacingOccurrences(of: "var", with: "")
                 .replacingOccurrences(of: " ", with: "")
-                .replacingOccurrences(of: ",", with: "")
-                .replacingOccurrences(of: "?", with: "")})
+            .replacingOccurrences(of: ",", with: "")})
+//                .replacingOccurrences(of: "?", with: "")})
         var map:[String:Any] = [:]
         for var propertyText in propertyTexts {
-            let splits = propertyText.components(separatedBy: "/")
+            var splits = propertyText.components(separatedBy: "/")
             guard splits.count > 0 else {
                 throw ExitCode.failure
             }
             propertyText = splits[0]
+            if (propertyText.contains("?")) {
+                propertyText = propertyText.components(separatedBy: "?")[0]
+            }
             if propertyText.isEmpty {
                 continue
             }
