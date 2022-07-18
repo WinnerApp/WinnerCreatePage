@@ -308,7 +308,7 @@ struct ModelCommand: ParsableCommand {
 
             if type == "String" {
                 map[name] = ""
-            } else if type == "Int" || type == "Long" {
+            } else if type == "Int" || type == "Long" || type == "Double" {
                 map[name] = 0
             } else if type == "Boolean" {
                 map[name] = true
