@@ -78,9 +78,9 @@ struct ModelCommand: ParsableCommand {
         var modelCode = """
         import 'package:json_annotation/json_annotation.dart';
 
-        part '\(name).g.dart';
+        part '\(createName).g.dart';
         """
-        let modelName = getCreateName(name: name)
+        let modelName = getCreateName(name: createName)
         
         let contentCode = try generateModelCode(root: true,
                                             name: modelName,
@@ -95,11 +95,11 @@ struct ModelCommand: ParsableCommand {
     
 //        print(modelCode)
         
-        let _gCode = generageGCode(name: getCreateName(name: name))
+        let _gCode = generageGCode(name: getCreateName(name: createName))
         codes.modelGCode.append(_gCode)
         
         var gCode = """
-        part of '\(name).dart';\n
+        part of '\(createName).dart';\n
         """
         let gCodes = codes.modelGCode.reversed()
         for code in gCodes {
@@ -121,7 +121,7 @@ struct ModelCommand: ParsableCommand {
             try context.runAndPrint("mkdir", "model")
         }
         context.currentdirectory = model
-        let modelFile = model + "/\(name).dart"
+        let modelFile = model + "/\(createName).dart"
         if checkDirExit(dir: modelFile, isDir: false), !force {
             print("\(modelFile)已经存在 可以使用 -f 参数强制重写")
             throw ExitCode.failure
@@ -130,7 +130,7 @@ struct ModelCommand: ParsableCommand {
                                 atomically: true,
                                 encoding: .utf8)
         }
-        let modelGFile = model + "/\(name).g.dart"
+        let modelGFile = model + "/\(createName).g.dart"
         if checkDirExit(dir: modelGFile, isDir: false), !force {
             print("\(modelGFile)已经存在 可以使用-f重写")
             throw ExitCode.failure
@@ -141,7 +141,7 @@ struct ModelCommand: ParsableCommand {
         }
         context.currentdirectory = pwd
         try context.runAndPrint("flutter","pub","run","build_runner","build","--delete-conflicting-outputs")
-        print("\(name)模型代码生成成功")
+        print("\(createName)模型代码生成成功")
     }
     
     func generateModelCode(root:Bool,
@@ -325,6 +325,8 @@ struct ModelCommand: ParsableCommand {
         }
         try parseRoot(json: map)
     }
+    
+    var createName: String { humpTurnedUnderline(name: name) }
 }
 
 enum FromCodeLanguage: String, ExpressibleByArgument {

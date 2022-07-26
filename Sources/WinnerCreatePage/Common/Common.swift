@@ -137,3 +137,23 @@ func getTypeDefault(from name:String) throws -> String {
     print("\(type(of: name))类型没有默认值，请联系开发者。")
     throw ExitCode.failure
 }
+
+
+func humpTurnedUnderline(name: String) -> String {
+    if name.count == 0 {
+        return name
+    }
+    var newName: String = ""
+    
+    name.utf16.forEach { code in
+        guard let aCode = "A".utf16.first else { return }
+        guard let zCode = "Z".utf16.first else { return }
+        if code >= aCode && code <= zCode {
+            newName += "_"
+            newName += String(utf16CodeUnits: [code], count: 1).lowercased()
+        } else {
+            newName += String(utf16CodeUnits: [code], count: 1)
+        }
+    }
+    return newName
+}

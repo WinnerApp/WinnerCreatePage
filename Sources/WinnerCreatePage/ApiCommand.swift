@@ -63,10 +63,10 @@ struct ApiCommand: ParsableCommand {
         let responseType = responseTypes[responseTypeIndex]
         let converter:String
         let modelName:String
-        let className = getCreateName(name: name)
+        let className = getCreateName(name: createName)
         if responseType == "JSON" {
             converter = className + "Response"
-            ModelCommand.main(["\(name)_response", "-f"])
+            ModelCommand.main(["\(createName)_response", "-f"])
             modelName = converter
         } else {
             converter = "DefaultJsonConverter<\(responseType)>"
@@ -97,7 +97,7 @@ struct ApiCommand: ParsableCommand {
             context.currentdirectory = libPath
             try context.runAndPrint("mkdir", "api")
         }
-        let apiFile = apiPath + "/\(name)_api.dart"
+        let apiFile = apiPath + "/\(createName)_api.dart"
         if FileManager.default.fileExists(atPath: apiFile), !force {
             print("\(apiFile) 已经存在，如果想重写请带上 -f 参数")
             return
@@ -146,6 +146,8 @@ struct ApiCommand: ParsableCommand {
           _Model get model => _Model();
         """
     }
+    
+    var createName: String { humpTurnedUnderline(name: name) }
 }
 
 

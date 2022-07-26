@@ -53,7 +53,7 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "model test -f --code=kotlin"
+            argument = "api bindMoveStockCarCode"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>

@@ -29,12 +29,12 @@ struct PageCommand: ParsableCommand {
         var currentdirectory = "\(pwd)/lib/page"
         SwiftShell.main.currentdirectory = currentdirectory
         /// 创建对应目录
-        try runAndPrint("mkdir", name)
-        currentdirectory += "/\(name)"
+        try runAndPrint("mkdir", createName)
+        currentdirectory += "/\(createName)"
         SwiftShell.main.currentdirectory = currentdirectory
-        let crateName = getCreateName(name: name)
-        let pageContent = pageContent(name: crateName, pathName: name)
-        let pageFile = "\(currentdirectory)/\(name)_page.dart"
+        let crateName = getCreateName(name: createName)
+        let pageContent = pageContent(name: crateName, pathName: createName)
+        let pageFile = "\(currentdirectory)/\(createName)_page.dart"
         if FileManager.default.fileExists(atPath: pageFile), !force {
             print("\(pageFile)已经存在，重写请添加 -f 参数")
             return
@@ -54,12 +54,12 @@ struct PageCommand: ParsableCommand {
         
         class _VM extends BaseViewModel {}
         """
-        let viewModelPath = "\(currentdirectory)/\(name)_page_view_model.dart"
+        let viewModelPath = "\(currentdirectory)/\(createName)_page_view_model.dart"
         if FileManager.default.fileExists(atPath: viewModelPath), !force {
             print("\(viewModelPath)已经存在，重写请添加 -f 参数")
             return
         }
-        FileManager.default.createFile(atPath: "\(currentdirectory)/\(name)_page_view_model.dart",
+        FileManager.default.createFile(atPath: "\(currentdirectory)/\(createName)_page_view_model.dart",
                                        contents: viewModelContent.data(using: .utf8),
                                        attributes: nil)
     }
@@ -92,5 +92,7 @@ struct PageCommand: ParsableCommand {
         }
         """
     }
+    
+    var createName: String { humpTurnedUnderline(name: name) }
 }
 
