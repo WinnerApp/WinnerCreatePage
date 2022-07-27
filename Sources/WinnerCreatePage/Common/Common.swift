@@ -149,7 +149,9 @@ func humpTurnedUnderline(name: String) -> String {
         guard let aCode = "A".utf16.first else { return }
         guard let zCode = "Z".utf16.first else { return }
         if code >= aCode && code <= zCode {
-            newName += "_"
+            if newName.count > 0 {
+                newName += "_"
+            }
             newName += String(utf16CodeUnits: [code], count: 1).lowercased()
         } else {
             newName += String(utf16CodeUnits: [code], count: 1)
