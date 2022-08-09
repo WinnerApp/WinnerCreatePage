@@ -312,9 +312,12 @@ struct ModelCommand: ParsableCommand {
                 map[name] = 0
             } else if type == "Boolean" {
                 map[name] = true
-            } else if type == "Array<Long>" {
-                map["name"] = [2]
-            } else {
+            } else if type == "Array<Long>" || type == "ArrayList<Long>" {
+                map[name] = [2]
+            } else if type == "ArrayList<String>" {
+                map[name] = [""]
+            }
+            else {
                 print("未识别类型 \(type)")
                 throw ExitCode.failure
             }
